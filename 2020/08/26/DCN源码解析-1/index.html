@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta name="description" content="Deform_conv.py里面包含 DeformConvFunction 和 ModulatedDeformConvFunction 两个继承了torch.autograd.Function的function  torch.autogrid.Function Descrption : Records operation history and defines formulas for diffe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DCN源码解析-1">
+<meta property="og:url" content="http://yoursite.com/2020/08/26/DCN%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Deform_conv.py里面包含 DeformConvFunction 和 ModulatedDeformConvFunction 两个继承了torch.autograd.Function的function  torch.autogrid.Function Descrption : Records operation history and defines formulas for diffe">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-26T13:45:32.000Z">
+<meta property="article:modified_time" content="2020-08-26T13:45:54.870Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="DCN">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    
+    <title>DCN源码解析-1 · chenhaoming&#39;s Studio</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Chenhaoming&#39;s Studio.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">DCN源码解析-1</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Chenhaoming's Studio.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            DCN源码解析-1
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "DCN">DCN</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">1.6k</span>Reading time: <span class="post-count reading-time">9 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/08/26</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="Deform-conv-py"><a href="#Deform-conv-py" class="headerlink" title="Deform_conv.py"></a>Deform_conv.py</h2><p>里面包含 <strong>DeformConvFunction</strong> 和 <strong>ModulatedDeformConvFunction</strong> 两个继承了<a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/autograd.html?highlight=function#torch.autograd.Function">torch.autograd.Function</a>的function</p>
+<blockquote>
+<p>torch.autogrid.Function</p>
+<p>Descrption : Records operation history and defines formulas for differentiating ops</p>
+<p>Two Static function need overrideen </p>
+<blockquote>
+<p>backward (ctx : Any , *grad_outputs: Any )  -&gt; Any</p>
+<p>It must accept a context <code>ctx</code> as the first argument, followed by as many outputs did <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/autograd.html?highlight=function#torch.autograd.Function.forward"><code>forward()</code></a> return, and it should return as many tensors, as there were inputs to <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/autograd.html?highlight=function#torch.autograd.Function.forward"><code>forward()</code></a></p>
+</blockquote>
+<blockquote>
+<p>forward (ctx : Any , *args : Any , **kwargs : Any ) -&gt; Any</p>
+</blockquote>
+</blockquote>
+<p>这边重点关注 <strong><em>ModulatedDeformConvFunction</em></strong></p>
+<p>看之前先了解里面用到的<strong>Pytorch</strong>相关方法</p>
+<blockquote>
+<ol>
+<li>torch.Tensor.new_empty(<em>size</em>, <em>dtype=None</em>, <em>device=None</em>, <em>requires_grad=False</em>) –&gt; Tensor</li>
+</ol>
+<blockquote>
+<p>official : Returns a Tensor of size <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/tensors.html?highlight=new_empty#torch.Tensor.size"><code>size</code></a> filled with uninitialized data. By default, the returned Tensor has the same <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.dtype"><code>torch.dtype</code></a> and <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.torch.device"><code>torch.device</code></a> as this tensor.</p>
+<p>重点在于创建的tensor是为初始化，并且dtype和device 于原本的tensor相同。</p>
+</blockquote>
+<ol start="2">
+<li>torch.autograd.function._ContextMethodMixin.save_for_backward ( * tensors) </li>
+</ol>
+<blockquote>
+<p>official : Saves given tensors for a future call to <code>backward()</code>.  <strong>This should be called at most once, and only from inside the</strong> <code>forward()</code> <strong>method</strong></p>
+<p>这边就是将需要梯度计算的tensor，保存到ctx中，然后在backward中调用.</p>
+</blockquote>
+</blockquote>
+<h4 id="weight和bias的shape"><a href="#weight和bias的shape" class="headerlink" title="weight和bias的shape"></a>weight和bias的shape</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># out_channels ,  input_channels // groups_size  , * kernel_size</span></span><br><span class="line"><span class="comment"># ==&gt; output_channels_num , group_num , kernel_height , kernel_width</span></span><br><span class="line">self.weight = nn.Parameter(torch.Tensor(out_channels, in_channels // groups,*self.kernel_size))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># out_channels_num</span></span><br><span class="line">self.bias = nn.Parameter(torch.Tensor(out_channels))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="forward"><a href="#forward" class="headerlink" title="forward"></a>forward</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line">   <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">ctx,input,offset,mask,weight,bias=None,stride=<span class="number">1</span>,padding=<span class="number">0</span>,dilation=<span class="number">1</span>,groups=<span class="number">1</span>,deformable_groups=<span class="number">1</span></span>):</span></span><br><span class="line">       ctx.stride = stride</span><br><span class="line">       ctx.padding = padding</span><br><span class="line">       ctx.dilation = dilation</span><br><span class="line">       ctx.groups = groups</span><br><span class="line">       ctx.deformable_groups = deformable_groups</span><br><span class="line">       ctx.with_bias = bias <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span></span><br><span class="line">       <span class="keyword">if</span> <span class="keyword">not</span> ctx.with_bias:</span><br><span class="line">           bias = input.new_empty(<span class="number">1</span>)  <span class="comment"># fake tensor</span></span><br><span class="line">       <span class="keyword">if</span> <span class="keyword">not</span> input.is_cuda:</span><br><span class="line">           <span class="keyword">raise</span> NotImplementedError</span><br><span class="line">       <span class="keyword">if</span> weight.requires_grad <span class="keyword">or</span> mask.requires_grad <span class="keyword">or</span> offset.requires_grad \</span><br><span class="line">               <span class="keyword">or</span> input.requires_grad:</span><br><span class="line">           <span class="comment"># 当 require_grad = True 即 model 为 train mode 时保存</span></span><br><span class="line">           ctx.save_for_backward(input, offset, mask, weight, bias)</span><br><span class="line">       </span><br><span class="line">       <span class="comment"># 根据 设定的参数 来生成输出大小</span></span><br><span class="line">       output = input.new_empty(ModulatedDeformConvFunction._infer_shape(ctx, input,weight))  </span><br><span class="line">       <span class="comment"># TODO ,暂时不知道用来干什么</span></span><br><span class="line">       ctx._bufs = [input.new_empty(<span class="number">0</span>), input.new_empty(<span class="number">0</span>)]</span><br><span class="line">       <span class="comment"># 进入 cpp 模块</span></span><br><span class="line">       deform_conv_cuda.modulated_deform_conv_cuda_forward(</span><br><span class="line">           input, weight, bias, ctx._bufs[<span class="number">0</span>], offset, mask, output,</span><br><span class="line">           ctx._bufs[<span class="number">1</span>], weight.shape[<span class="number">2</span>], weight.shape[<span class="number">3</span>], ctx.stride,</span><br><span class="line">           ctx.stride, ctx.padding, ctx.padding, ctx.dilation, ctx.dilation,</span><br><span class="line">           ctx.groups, ctx.deformable_groups, ctx.with_bias)</span><br><span class="line">       <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="backward"><a href="#backward" class="headerlink" title="backward"></a>backward</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">ctx, grad_output</span>):</span></span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">not</span> grad_output.is_cuda:</span><br><span class="line">          <span class="keyword">raise</span> NotImplementedError</span><br><span class="line">      input, offset, mask, weight, bias = ctx.saved_tensors</span><br><span class="line">      grad_input = torch.zeros_like(input)</span><br><span class="line">      grad_offset = torch.zeros_like(offset)</span><br><span class="line">      grad_mask = torch.zeros_like(mask)</span><br><span class="line">      grad_weight = torch.zeros_like(weight)</span><br><span class="line">      grad_bias = torch.zeros_like(bias)</span><br><span class="line">      deform_conv_cuda.modulated_deform_conv_cuda_backward(</span><br><span class="line">          input, weight, bias, ctx._bufs[<span class="number">0</span>], offset, mask, ctx._bufs[<span class="number">1</span>],</span><br><span class="line">          grad_input, grad_weight, grad_bias, grad_offset, grad_mask,</span><br><span class="line">          grad_output, weight.shape[<span class="number">2</span>], weight.shape[<span class="number">3</span>], ctx.stride,</span><br><span class="line">          ctx.stride, ctx.padding, ctx.padding, ctx.dilation, ctx.dilation,</span><br><span class="line">          ctx.groups, ctx.deformable_groups, ctx.with_bias)</span><br><span class="line">      <span class="keyword">if</span> <span class="keyword">not</span> ctx.with_bias:</span><br><span class="line">          grad_bias = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> (grad_input, grad_offset, grad_mask, grad_weight, grad_bias,</span><br><span class="line">              <span class="literal">None</span>, <span class="literal">None</span>, <span class="literal">None</span>, <span class="literal">None</span>, <span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>总结：Deform_conv.py 主要是做了数据的准备工作</p>
+<h2 id="deform-conv-cuda-cpp"><a href="#deform-conv-cuda-cpp" class="headerlink" title="deform_conv_cuda.cpp"></a>deform_conv_cuda.cpp</h2><p>读懂Pytorch c++ extension 需要了解的函数</p>
+<blockquote>
+<p>1.AT_CHECK</p>
+<blockquote>
+<p>类似python的assert</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/pytorch/pytorch/issues/36581">注</a> : torch1.5以后使用 <a target="_blank" rel="noopener" href="https://pytorch.org/cppdocs/api/file_c10_util_Exception.h.html#file-c10-util-exception-h">TORCH_CHECK</a></p>
+</blockquote>
+<p>2.addmm_</p>
+<blockquote>
+<p>Tensor &amp;addmm_ (const Tensor &amp;mat1, const Tensor &amp;mat2 , Scalar beta = 1 , Scalar alpha = 1  )  const</p>
+<p>out = beta * input + alpha * (mat1 x mat2 )</p>
+</blockquote>
+<p>3.view_as</p>
+<blockquote>
+<p>view_as (other) -&gt; Tensor</p>
+<p>View this tensor as the same size as <code>other</code>. <code>self.view_as(other)</code> is equivalent to <code>self.view(other.size())</code></p>
+</blockquote>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">modulated_deform_conv_cuda_forward</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    at::Tensor input, at::Tensor weight, at::Tensor bias, at::Tensor ones,</span></span></span><br><span class="line"><span class="function"><span class="params">    at::Tensor offset, at::Tensor mask, at::Tensor output, at::Tensor columns,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">int</span> kernel_h, <span class="keyword">int</span> kernel_w, <span class="keyword">const</span> <span class="keyword">int</span> stride_h, <span class="keyword">const</span> <span class="keyword">int</span> stride_w,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="keyword">int</span> pad_h, <span class="keyword">const</span> <span class="keyword">int</span> pad_w, <span class="keyword">const</span> <span class="keyword">int</span> dilation_h,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="keyword">int</span> dilation_w, <span class="keyword">const</span> <span class="keyword">int</span> group, <span class="keyword">const</span> <span class="keyword">int</span> deformable_group,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">const</span> <span class="keyword">bool</span> with_bias)</span> </span>&#123;</span><br><span class="line">  AT_CHECK(input.is_contiguous(), <span class="string">&quot;input tensor has to be contiguous&quot;</span>);</span><br><span class="line">  AT_CHECK(weight.is_contiguous(), <span class="string">&quot;weight tensor has to be contiguous&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> batch = input.<span class="built_in">size</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> channels = input.<span class="built_in">size</span>(<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> <span class="built_in">height</span> = input.<span class="built_in">size</span>(<span class="number">2</span>);</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> <span class="built_in">width</span> = input.<span class="built_in">size</span>(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> channels_out = weight.<span class="built_in">size</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> channels_kernel = weight.<span class="built_in">size</span>(<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> kernel_h_ = weight.<span class="built_in">size</span>(<span class="number">2</span>);</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> kernel_w_ = weight.<span class="built_in">size</span>(<span class="number">3</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// function传入的参数与 weight 的大小做检查</span></span><br><span class="line">  <span class="keyword">if</span> (kernel_h_ != kernel_h || kernel_w_ != kernel_w)</span><br><span class="line">    AT_ERROR(<span class="string">&quot;Input shape and kernel shape wont match: (%d x %d vs %d x %d).&quot;</span>,</span><br><span class="line">             kernel_h_, kernel_w, kernel_h_, kernel_w_);</span><br><span class="line">  <span class="keyword">if</span> (channels != channels_kernel * group)</span><br><span class="line">    AT_ERROR(<span class="string">&quot;Input shape and kernel channels wont match: (%d vs %d).&quot;</span>,</span><br><span class="line">             channels, channels_kernel * group);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 计算出 output featuremap height</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> height_out =(<span class="built_in">height</span> + <span class="number">2</span> * pad_h - (dilation_h * (kernel_h - <span class="number">1</span>) + <span class="number">1</span>)) / stride_h + <span class="number">1</span>;</span><br><span class="line">  <span class="comment">// 计算出 output featuremap width</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> width_out = (<span class="built_in">width</span> + <span class="number">2</span> * pad_w - (dilation_w * (kernel_w - <span class="number">1</span>) + <span class="number">1</span>)) / stride_w + <span class="number">1</span>;</span><br><span class="line">	</span><br><span class="line">  <span class="comment">// ctx._bufs = [input.new_empty(0), input.new_empty(0)] -&gt; ones</span></span><br><span class="line">  <span class="keyword">if</span> (ones.ndimension() != <span class="number">2</span> ||ones.<span class="built_in">size</span>(<span class="number">0</span>) * ones.<span class="built_in">size</span>(<span class="number">1</span>) &lt; height_out * width_out) &#123;</span><br><span class="line">    <span class="comment">// Resize plane and fill with ones...</span></span><br><span class="line">    ones = at::ones(&#123;height_out, width_out&#125;, input.options());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// resize output</span></span><br><span class="line">  output = output.view(&#123;batch, channels_out, height_out, width_out&#125;).zero_();  <span class="comment">// batch , channels_out , height_out , width_out</span></span><br><span class="line">  <span class="comment">// resize temporary columns</span></span><br><span class="line">  columns = at::zeros(&#123;channels * kernel_h * kernel_w, <span class="number">1</span> * height_out * width_out&#125;,input.options());</span><br><span class="line"> </span><br><span class="line">  <span class="comment">//  batch_size , group , channels_out / group , heights , widths</span></span><br><span class="line">  output = output.view(&#123;output.<span class="built_in">size</span>(<span class="number">0</span>), group, output.<span class="built_in">size</span>(<span class="number">1</span>) / group,output.<span class="built_in">size</span>(<span class="number">2</span>), output.<span class="built_in">size</span>(<span class="number">3</span>)&#125;);</span><br><span class="line">        </span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> b = <span class="number">0</span>; b &lt; batch; b++) &#123;</span><br><span class="line">    <span class="comment">// 这里边处理可形变卷积的</span></span><br><span class="line">    modulated_deformable_im2col_cuda(</span><br><span class="line">        input[b], offset[b], mask[b], <span class="number">1</span>, channels, <span class="built_in">height</span>, <span class="built_in">width</span>, height_out,</span><br><span class="line">        width_out, kernel_h, kernel_w, pad_h, pad_w, stride_h, stride_w,</span><br><span class="line">        dilation_h, dilation_w, deformable_group, columns);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// divide into group</span></span><br><span class="line">   	</span><br><span class="line">    <span class="comment">// group_size ,  group_mum , </span></span><br><span class="line">    weight = weight.view(&#123;group, weight.<span class="built_in">size</span>(<span class="number">0</span>) / group, weight.<span class="built_in">size</span>(<span class="number">1</span>),weight.<span class="built_in">size</span>(<span class="number">2</span>), weight.<span class="built_in">size</span>(<span class="number">3</span>)&#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 待求证：columns 就是 input featuremap 和offset后的采样点 还有mask的综合结果</span></span><br><span class="line">    columns = columns.view(&#123;group, columns.<span class="built_in">size</span>(<span class="number">0</span>) / group, columns.<span class="built_in">size</span>(<span class="number">1</span>)&#125;);</span><br><span class="line"></span><br><span class="line">      </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> g = <span class="number">0</span>; g &lt; group; g++) &#123;</span><br><span class="line">      output[b][g] = output[b][g]</span><br><span class="line">                         .flatten(<span class="number">1</span>) <span class="comment">// 变成一维的</span></span><br><span class="line">                         .addmm_(weight[g].flatten(<span class="number">1</span>), columns[g]) <span class="comment">// mat + weight[g].flatten(1)* columns[g]</span></span><br><span class="line">                         .view_as(output[b][g]); <span class="comment">// view(output[b][g].size())</span></span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    </span><br><span class="line">    weight = weight.view(&#123;weight.<span class="built_in">size</span>(<span class="number">0</span>) * weight.<span class="built_in">size</span>(<span class="number">1</span>), weight.<span class="built_in">size</span>(<span class="number">2</span>),weight.<span class="built_in">size</span>(<span class="number">3</span>), weight.<span class="built_in">size</span>(<span class="number">4</span>)&#125;);</span><br><span class="line">    columns = columns.view(&#123;columns.<span class="built_in">size</span>(<span class="number">0</span>) * columns.<span class="built_in">size</span>(<span class="number">1</span>), columns.<span class="built_in">size</span>(<span class="number">2</span>)&#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  output = output.view(&#123;output.<span class="built_in">size</span>(<span class="number">0</span>), output.<span class="built_in">size</span>(<span class="number">1</span>) * output.<span class="built_in">size</span>(<span class="number">2</span>),</span><br><span class="line">                        output.<span class="built_in">size</span>(<span class="number">3</span>), output.<span class="built_in">size</span>(<span class="number">4</span>)&#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (with_bias) &#123;</span><br><span class="line">    output += bias.view(&#123;<span class="number">1</span>, bias.<span class="built_in">size</span>(<span class="number">0</span>), <span class="number">1</span>, <span class="number">1</span>&#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="deform-conv-cuda-kernel-cu"><a href="#deform-conv-cuda-kernel-cu" class="headerlink" title="deform_conv_cuda_kernel.cu"></a>deform_conv_cuda_kernel.cu</h2><p>核心内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">template &lt;typename scalar_t&gt;</span><br><span class="line">__global__ void modulated_deformable_im2col_gpu_kernel(const int n,</span><br><span class="line">                                                       const scalar_t *data_im, const scalar_t *data_offset, const scalar_t *data_mask,</span><br><span class="line">                                                       const int height, const int width, const int kernel_h, const int kernel_w,</span><br><span class="line">                                                       const int pad_h, const int pad_w,</span><br><span class="line">                                                       const int stride_h, const int stride_w,</span><br><span class="line">                                                       const int dilation_h, const int dilation_w,</span><br><span class="line">                                                       const int channel_per_deformable_group,</span><br><span class="line">                                                       const int batch_size, const int num_channels, const int deformable_group,</span><br><span class="line">                                                       const int height_col, const int width_col,</span><br><span class="line">                                                       scalar_t *data_col)</span><br><span class="line">&#123;</span><br><span class="line">  CUDA_KERNEL_LOOP(index, n)</span><br><span class="line">  &#123;</span><br><span class="line">    &#x2F;&#x2F; index index of output matrix</span><br><span class="line">    &#x2F;&#x2F; height_out -&gt; height_col , width_out -&gt; width_col</span><br><span class="line">    const int w_col &#x3D; index % width_col;             &#x2F;&#x2F; width index</span><br><span class="line">    const int h_col &#x3D; (index &#x2F; width_col) % height_col;  &#x2F;&#x2F; height index</span><br><span class="line">    const int b_col &#x3D; (index &#x2F; width_col &#x2F; height_col) % batch_size;</span><br><span class="line">    const int c_im &#x3D; (index &#x2F; width_col &#x2F; height_col) &#x2F; batch_size;</span><br><span class="line">    const int c_col &#x3D; c_im * kernel_h * kernel_w;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; compute deformable group index</span><br><span class="line">    const int deformable_group_index &#x3D; c_im &#x2F; channel_per_deformable_group;</span><br><span class="line"></span><br><span class="line">    const int h_in &#x3D; h_col * stride_h - pad_h;</span><br><span class="line">    const int w_in &#x3D; w_col * stride_w - pad_w;</span><br><span class="line"></span><br><span class="line">    scalar_t *data_col_ptr &#x3D; data_col + ((c_col * batch_size + b_col) * height_col + h_col) * width_col + w_col;</span><br><span class="line">    &#x2F;&#x2F;const float* data_im_ptr &#x3D; data_im + ((b_col * num_channels + c_im) * height + h_in) * width + w_in;</span><br><span class="line">    const scalar_t *data_im_ptr &#x3D; data_im + (b_col * num_channels + c_im) * height * width;</span><br><span class="line"></span><br><span class="line">    const scalar_t *data_offset_ptr &#x3D; data_offset + (b_col * deformable_group + deformable_group_index) * 2 * kernel_h * kernel_w * height_col * width_col;</span><br><span class="line">    const scalar_t *data_mask_ptr &#x3D; data_mask + (b_col * deformable_group + deformable_group_index) * kernel_h * kernel_w * height_col * width_col;</span><br><span class="line"></span><br><span class="line">    for (int i &#x3D; 0; i &lt; kernel_h; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">      for (int j &#x3D; 0; j &lt; kernel_w; ++j)</span><br><span class="line">      &#123;</span><br><span class="line">        const int data_offset_h_ptr &#x3D; ((2 * (i * kernel_w + j)) * height_col + h_col) * width_col + w_col;</span><br><span class="line">        const int data_offset_w_ptr &#x3D; ((2 * (i * kernel_w + j) + 1) * height_col + h_col) * width_col + w_col;</span><br><span class="line">        const int data_mask_hw_ptr &#x3D; ((i * kernel_w + j) * height_col + h_col) * width_col + w_col;</span><br><span class="line"></span><br><span class="line">        const scalar_t offset_h &#x3D; data_offset_ptr[data_offset_h_ptr];</span><br><span class="line">        const scalar_t offset_w &#x3D; data_offset_ptr[data_offset_w_ptr];</span><br><span class="line">        const scalar_t mask &#x3D; data_mask_ptr[data_mask_hw_ptr];</span><br><span class="line"></span><br><span class="line">        scalar_t val &#x3D; static_cast&lt;scalar_t&gt;(0);</span><br><span class="line">        const scalar_t h_im &#x3D; h_in + i * dilation_h + offset_h;</span><br><span class="line">        const scalar_t w_im &#x3D; w_in + j * dilation_w + offset_w;</span><br><span class="line">        &#x2F;&#x2F;if (h_im &gt;&#x3D; 0 &amp;&amp; w_im &gt;&#x3D; 0 &amp;&amp; h_im &lt; height &amp;&amp; w_im &lt; width) &#123;</span><br><span class="line">        if (h_im &gt; -1 &amp;&amp; w_im &gt; -1 &amp;&amp; h_im &lt; height &amp;&amp; w_im &lt; width)</span><br><span class="line">        &#123;</span><br><span class="line">          &#x2F;&#x2F;const float map_h &#x3D; i * dilation_h + offset_h;</span><br><span class="line">          &#x2F;&#x2F;const float map_w &#x3D; j * dilation_w + offset_w;</span><br><span class="line">          &#x2F;&#x2F;const int cur_height &#x3D; height - h_in;</span><br><span class="line">          &#x2F;&#x2F;const int cur_width &#x3D; width - w_in;</span><br><span class="line">          &#x2F;&#x2F;val &#x3D; dmcn_im2col_bilinear(data_im_ptr, width, cur_height, cur_width, map_h, map_w);</span><br><span class="line">          val &#x3D; dmcn_im2col_bilinear(data_im_ptr, width, height, width, h_im, w_im);</span><br><span class="line">        &#125;</span><br><span class="line">        *data_col_ptr &#x3D; val * mask;</span><br><span class="line">        data_col_ptr +&#x3D; batch_size * height_col * width_col;</span><br><span class="line">        &#x2F;&#x2F;data_col_ptr +&#x3D; height_col * width_col;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>Author：<a href="http://yoursite.com">John Doe</a>
+            <p>原文链接：<a href="http://yoursite.com/2020/08/26/DCN%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-1/">http://yoursite.com/2020/08/26/DCN%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-1/</a>
+            <p>发表日期：<a href="http://yoursite.com/2020/08/26/DCN%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-1/">August 26th 2020, 9:45:32 pm</a>
+            <p>更新日期：<a href="http://yoursite.com/2020/08/26/DCN%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-1/">August 26th 2020, 9:45:54 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- gitalk评论 -->
+
+    <!-- utteranc评论 -->
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:chenhaomingbob@163.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/chenhaomingbob" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Deform-conv-py"><span class="toc-number">1.</span> <span class="toc-text">Deform_conv.py</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#weight%E5%92%8Cbias%E7%9A%84shape"><span class="toc-number">1.0.1.</span> <span class="toc-text">weight和bias的shape</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#forward"><span class="toc-number">1.0.2.</span> <span class="toc-text">forward</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#backward"><span class="toc-number">1.0.3.</span> <span class="toc-text">backward</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#deform-conv-cuda-cpp"><span class="toc-number">2.</span> <span class="toc-text">deform_conv_cuda.cpp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#deform-conv-cuda-kernel-cu"><span class="toc-number">3.</span> <span class="toc-text">deform_conv_cuda_kernel.cu</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 1
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/26</span><a class="archive-post-title" href= "/2020/08/26/DCN%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-1/" >DCN源码解析-1</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="DCN"><span class="iconfont-archer">&#xe606;</span>DCN</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
