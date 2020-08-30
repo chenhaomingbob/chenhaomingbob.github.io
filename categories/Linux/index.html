@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://chenhaomingbob.github.io/categories/LeetCode/index.html">
+<meta property="og:url" content="https://chenhaomingbob.github.io/categories/Linux/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="chenhaomingbob">
@@ -354,29 +354,25 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2020/08/27/332-%E9%87%8D%E6%96%B0%E5%AE%89%E6%8E%92%E8%A1%8C%E7%A8%8B/" >
+        <a class="abstract-title" href = "/2020/08/30/Linux-setfacl/" >
             
-                <span>332-重新安排行程</span>
+                <span>Linux - getfacl / setfacl</span>
         </a>
         <div class="abstract-content">
-            332.重新安排行程题干给定一个机票的字符串二维数组 [from, to]，子数组中的两个成员分别表示飞机出发和降落的机场地点，对该行程进行重新规划排序。所有这些机票都属于一个从 JFK（肯尼迪国际机场）出发的先生，所以该行程必须从 JFK 开始。
-说明:
-如果存在多种有效的行程，你可以按字符自然排序返回最小的行程组合。例如，行程 [“JFK”, “LGA”] 与 [“JFK”, “LGB”] 相比就更小，排序更靠前所有的机场都用三个大写字母表示（机场代码）。假定所有机票至少存在一种合理的行程。示例 1:
+            Linux 命令 - getfacl / setfacl1.概述
+getfacl -  get file acl
+setfacl - set file acl
 
-输入: [[“MUC”, “LHR”], [“JFK”, “MUC”], [“S...
+类似 chmod 命令，但是与 chmod 不同的是，setfacl是更加对文件权限的控制是更加精细的。它能让某一个用户对某一个文件具有某个权限，这种能赋予某种具体权限设置叫ACL(Access Control List)
+2.用法
+用法:  setfacl [-bkndRLP] { -m|-M|-x|-X … } file …-m,       –modify-acl 更改文件的访问控制列表-M,       –modify-...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/08/27</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/08/30</span>
             </div>
             <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "数据结构">数据结构</a>
-    
-</div>
             
         </div>
     </article>
