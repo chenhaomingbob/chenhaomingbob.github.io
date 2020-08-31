@@ -461,28 +461,24 @@ height:50vh;
 
 <!-- City版安装代码已完成 -->
     
-    <div id="disqus_thread"></div>
-    <script>
-        /**
-    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-        
-        var disqus_config = function () {
-        this.page.url = "https://chenhaomingbob.github.io/2020/08/30/Linux-setfacl/";  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = "Linux - getfacl / setfacl"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-        };
-        
-        (function () { // DON'T EDIT BELOW THIS LINE
-            var d = document, s = d.createElement('script');
-            s.src = 'https://chenhaomingblog.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        })();
-
-    </script>
-    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
     
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: '1598754638000', // 可选。默认为 location.href
+        owner: 'chenhaomingbob',
+        repo: 'chenhaomingbob.github.io',
+        oauth: {
+            client_id: 'fb7951ecb84471dc4e86',
+            client_secret: '921abf558c3d529c8cd7b83b9aac9ffa602540ec',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
     <!-- gitalk评论 -->
 
     <!-- utteranc评论 -->
