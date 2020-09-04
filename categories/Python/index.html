@@ -22,7 +22,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://chenhaomingbob.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9B%9E%E6%BA%AF/index.html">
+<meta property="og:url" content="https://chenhaomingbob.github.io/categories/Python/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="chenhaomingbob">
@@ -354,37 +354,25 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/" >
+        <a class="abstract-title" href = "/2020/09/04/Log%E6%97%A5%E5%BF%97%E6%A8%A1%E5%9D%97/" >
             
-                <span>LeetCode-51-N皇后</span>
+                <span>logging日志模块</span>
         </a>
         <div class="abstract-content">
-            51.N皇后题干n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
+            Python 日志模块 loggingpython的logging模块logger是跟模块的绑定的
+1logger=logging.getLogger(__name__)
 
-上图为 8 皇后问题的一种解法。
-给定一个整数 n，返回所有不同的 n 皇后问题的解决方案。
-每一种解法包含一个明确的 n 皇后问题的棋子放置方案，该方案中 ‘Q’ 和 ‘.’ 分别代表了皇后和空位。
-示例
 
-输入：4输出：[ [“.Q..”,  // 解法 1  “…Q”,  “Q…”,  “..Q.”],
- [“..Q.”,  // 解法 2  “Q…”,  “…Q”,  “.Q..”]]解释: 4 皇后问题存在两个不同的解法。
 
-提示：
-
-皇后彼此不能相互攻击，也就是...
+之前写logger的时候发现会出现一个日志信息在控制台上打印了多次，之后检查的是时候发现控制logger的主要是name、Handler
+如果日志只打印一次，并且只写到一个日志文件之中12345678910self.logger = logging.getLogger(logger)## 检查一些handlerif len(self.logger.handlers) &gt; 0:	for hld in self...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/03</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/04</span>
             </div>
             <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "数据结构-回溯">数据结构-回溯</a>
-    
-</div>
             
         </div>
     </article>

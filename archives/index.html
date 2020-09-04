@@ -354,6 +354,35 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2020/09/04/Log%E6%97%A5%E5%BF%97%E6%A8%A1%E5%9D%97/" >
+            
+                <span>logging日志模块</span>
+        </a>
+        <div class="abstract-content">
+            Python 日志模块 loggingpython的logging模块logger是跟模块的绑定的
+1logger=logging.getLogger(__name__)
+
+
+
+之前写logger的时候发现会出现一个日志信息在控制台上打印了多次，之后检查的是时候发现控制logger的主要是name、Handler
+如果日志只打印一次，并且只写到一个日志文件之中12345678910self.logger = logging.getLogger(logger)## 检查一些handlerif len(self.logger.handlers) &gt; 0:	for hld in self...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/04</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/" >
             
                 <span>LeetCode-51-N皇后</span>
@@ -699,9 +728,20 @@ backward (ctx : Any , *grad_outputs: Any )  ...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 6
+        Total : 7
         </div>
         <!-- search  -->
         
@@ -714,6 +754,11 @@ backward (ctx : Any , *grad_outputs: Any )  ...
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span><a class="archive-post-title" href= "/2020/09/04/Log%E6%97%A5%E5%BF%97%E6%A8%A1%E5%9D%97/" >logging日志模块</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -798,6 +843,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="Python编程实战"><span class="iconfont-archer">&#xe60a;</span>Python编程实战</span>
     
         <span class="sidebar-category-name" data-categories="N皇后"><span class="iconfont-archer">&#xe60a;</span>N皇后</span>
+    
+        <span class="sidebar-category-name" data-categories="Python"><span class="iconfont-archer">&#xe60a;</span>Python</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
