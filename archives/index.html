@@ -354,6 +354,47 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2020/09/08/LeetCode-77-%E7%BB%84%E5%90%88/" >
+            
+                <span>LeetCode-77-组合</span>
+        </a>
+        <div class="abstract-content">
+            题干给定两个整数 n 和 k，返回 1 … n 中所有可能的 k 个数的组合。
+示例:输入: n = 4, k = 2输出:
+
+[  [2,4],  [3,4],  [2,3],  [1,2],  [1,3],  [1,4],]
+
+题解回溯算法既然是树形问题上的 深度优先遍历，因此首先画出树形结构。例如输入：n = 4, k = 2，我们可以发现如下递归结构：
+
+如果组合里有 1 ，那么需要在 [2, 3, 4] 里再找 1个数；
+
+如果组合里有 2 ，那么需要在 [3, 4] 里再找 1数。注意：这里不能再考虑 1，因为包含 1的组合，在第 1 种情况中已经包含。
+
+
+依次类推（后面部...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "回溯">回溯</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2020/09/04/Log%E6%97%A5%E5%BF%97%E6%A8%A1%E5%9D%97/" >
             
                 <span>logging日志模块</span>
@@ -745,9 +786,20 @@ backward (ctx : Any , *grad_outputs: Any )  ...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 7
+        Total : 8
         </div>
         <!-- search  -->
         
@@ -760,6 +812,11 @@ backward (ctx : Any , *grad_outputs: Any )  ...
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span><a class="archive-post-title" href= "/2020/09/08/LeetCode-77-%E7%BB%84%E5%90%88/" >LeetCode-77-组合</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -810,6 +867,8 @@ backward (ctx : Any , *grad_outputs: Any )  ...
         <span class="sidebar-tag-name" data-tags="数据结构-回溯"><span class="iconfont-archer">&#xe606;</span>数据结构-回溯</span>
     
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="回溯"><span class="iconfont-archer">&#xe606;</span>回溯</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
