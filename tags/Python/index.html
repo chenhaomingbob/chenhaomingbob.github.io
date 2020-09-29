@@ -359,13 +359,17 @@
                 <span>logging日志模块</span>
         </a>
         <div class="abstract-content">
-            Python 日志模块 loggingpython的logging模块logger是跟模块的绑定的
+            Python 日志模块 logging相关链接
+Link1
+写于 2020-09-26日如何让所有的logger都打印到一个文件中
+利用logger的继承链
+当logging.getlogger() 不带参数时，能够拿到 root 的logger，然后给 root logger 添加文件处理就行了。
+写于 2020-09-04 （理解存在问题）python的logging模块logger是跟模块的绑定的
 1logger=logging.getLogger(__name__)
 
 
 
-之前写logger的时候发现会出现一个日志信息在控制台上打印了多次，之后检查的是时候发现控制logger的主要是name、Handler
-如果日志只打印一次，并且只写到一个日志文件之中12345678910self.logger = logging.getLogger(logger)## 检查一些handlerif len(self.logger.handlers) &gt; 0:	for hld in self...
+之前写logger的时候发现会出现一个日志信息在控制台上打印了多次，之后检查的是时候发现控制logger的主...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -603,9 +607,35 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 14
         </div>
         <!-- search  -->
         
@@ -618,6 +648,16 @@
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/29</span><a class="archive-post-title" href= "/2020/09/29/LeetCode-Lowest-Common-Ancestor-of-a-Binary-Search-Tree/" >LeetCode-Lowest Common Ancestor of a Binary Search Tree</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2020/09/25/fast-reid%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" >fast-reid学习笔记</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -738,6 +778,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="Python"><span class="iconfont-archer">&#xe60a;</span>Python</span>
     
         <span class="sidebar-category-name" data-categories="数据结构"><span class="iconfont-archer">&#xe60a;</span>数据结构</span>
+    
+        <span class="sidebar-category-name" data-categories="深度学习项目学习"><span class="iconfont-archer">&#xe60a;</span>深度学习项目学习</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>

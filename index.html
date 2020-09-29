@@ -367,6 +367,53 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2020/09/29/LeetCode-Lowest-Common-Ancestor-of-a-Binary-Search-Tree/" >
+            
+                <span>LeetCode-Lowest Common Ancestor of a Binary Search Tree</span>
+        </a>
+        <div class="abstract-content">
+            235. Lowest Common Ancestor of a Binary Search Tree题干：Given a binary search tree (BST), find the lowest common ancestor (LCA) of two given nodes in the BST.
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes p and q as the lowest node in T th...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/29</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2020/09/25/fast-reid%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" >
+            
+                <span>fast-reid学习笔记</span>
+        </a>
+        <div class="abstract-content">
+            
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/25</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2020/09/21/Microsoft-s-written-3/" >
             
                 <span>Microsoft&#39;s-written-3</span>
@@ -533,13 +580,17 @@ Note: There can be more t...
                 <span>logging日志模块</span>
         </a>
         <div class="abstract-content">
-            Python 日志模块 loggingpython的logging模块logger是跟模块的绑定的
+            Python 日志模块 logging相关链接
+Link1
+写于 2020-09-26日如何让所有的logger都打印到一个文件中
+利用logger的继承链
+当logging.getlogger() 不带参数时，能够拿到 root 的logger，然后给 root logger 添加文件处理就行了。
+写于 2020-09-04 （理解存在问题）python的logging模块logger是跟模块的绑定的
 1logger=logging.getLogger(__name__)
 
 
 
-之前写logger的时候发现会出现一个日志信息在控制台上打印了多次，之后检查的是时候发现控制logger的主要是name、Handler
-如果日志只打印一次，并且只写到一个日志文件之中12345678910self.logger = logging.getLogger(logger)## 检查一些handlerif len(self.logger.handlers) &gt; 0:	for hld in self...
+之前写logger的时候发现会出现一个日志信息在控制台上打印了多次，之后检查的是时候发现控制logger的主...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -626,68 +677,6 @@ Note: There can be more t...
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/01</span>
             </div>
             <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2020/09/01/LeetCode-486-%E9%A2%84%E6%B5%8B%E8%B5%A2%E5%AE%B6/" >
-            
-                <span>LeetCode-486-预测赢家</span>
-        </a>
-        <div class="abstract-content">
-            题目-预测赢家给定一个表示分数的非负整数数组。 玩家 1 从数组任意一端拿取一个分数，随后玩家 2 继续从剩余数组任意一端拿取分数，然后玩家 1 拿，…… 。每次一个玩家只能拿取一个分数，分数被拿取之后不再可取。直到没有剩余分数可取时游戏结束。最终获得分数总和最多的玩家获胜。
-给定一个表示分数的数组，预测玩家1是否会成为赢家。你可以假设每个玩家的玩法都会使他的分数最大化。
-示例1:
-
-输入：[1, 5, 2]输出：False解释：一开始，玩家1可以从1和2中进行选择。如果他选择 2（或者 1 ），那么玩家 2 可以从 1（或者 2 ）和 5 中进行选择。如果玩家 2 选择了 5 ，那么玩...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/01</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2020/08/30/Linux-setfacl/" >
-            
-                <span>Linux - getfacl / setfacl</span>
-        </a>
-        <div class="abstract-content">
-            Linux 命令 - getfacl / setfacl1.概述
-getfacl -  get file acl
-setfacl - set file acl
-
-类似 chmod 命令，但是与 chmod 不同的是，setfacl是更加对文件权限的控制是更加精细的。它能让某一个用户对某一个文件具有某个权限，这种能赋予某种具体权限设置叫ACL(Access Control List)
-2.用法
-用法:  setfacl [-bkndRLP] { -m|-M|-x|-X … } file …-m,       –modify-acl 更改文件的访问控制列表-M,       –modify-...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/08/30</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux 权限控制">Linux 权限控制</a>
-    
-</div>
             
         </div>
     </article>
@@ -987,9 +976,35 @@ setfacl - set file acl
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 12
+        Total : 14
         </div>
         <!-- search  -->
         
@@ -1002,6 +1017,16 @@ setfacl - set file acl
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/29</span><a class="archive-post-title" href= "/2020/09/29/LeetCode-Lowest-Common-Ancestor-of-a-Binary-Search-Tree/" >LeetCode-Lowest Common Ancestor of a Binary Search Tree</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/25</span><a class="archive-post-title" href= "/2020/09/25/fast-reid%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" >fast-reid学习笔记</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1122,6 +1147,8 @@ jsonContent:
         <span class="sidebar-category-name" data-categories="Python"><span class="iconfont-archer">&#xe60a;</span>Python</span>
     
         <span class="sidebar-category-name" data-categories="数据结构"><span class="iconfont-archer">&#xe60a;</span>数据结构</span>
+    
+        <span class="sidebar-category-name" data-categories="深度学习项目学习"><span class="iconfont-archer">&#xe60a;</span>深度学习项目学习</span>
     
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
