@@ -27,15 +27,15 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="51.N皇后题干n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。  上图为 8 皇后问题的一种解法。 给定一个整数 n，返回所有不同的 n 皇后问题的解决方案。 每一种解法包含一个明确的 n 皇后问题的棋子放置方案，该方案中 ‘Q’ 和 ‘.’ 分别代表了皇后和空位。 示例  输入：4输出：[ [“.Q..”,  &#x2F;&#x2F; 解法 1  “…Q”,  “Q">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://chenhaomingbob.github.io/.io//8-queens.png">
-<meta property="og:image" content="https://chenhaomingbob.github.io/.io//1.png">
-<meta property="og:image" content="https://chenhaomingbob.github.io/.io//2.png">
+<meta property="og:image" content="https://chenhaomingbob.github.io/chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/8-queens.png">
+<meta property="og:image" content="https://chenhaomingbob.github.io/chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/1.png">
+<meta property="og:image" content="https://chenhaomingbob.github.io/chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/2.png">
 <meta property="article:published_time" content="2020-09-02T22:49:58.000Z">
-<meta property="article:modified_time" content="2020-09-08T01:36:24.011Z">
+<meta property="article:modified_time" content="2020-10-11T01:08:42.079Z">
 <meta property="article:author" content="chenhaomingbob">
-<meta property="article:tag" content="数据结构-回溯">
+<meta property="article:tag" content="回溯">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://chenhaomingbob.github.io/.io//8-queens.png">
+<meta name="twitter:image" content="https://chenhaomingbob.github.io/chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/8-queens.png">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     
@@ -283,7 +283,7 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "数据结构-回溯">数据结构-回溯</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "回溯">回溯</a>
     
 </div>
                 
@@ -419,7 +419,7 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <h1 id="51-N皇后"><a href="#51-N皇后" class="headerlink" title="51.N皇后"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/n-queens/">51.N皇后</a></h1><h2 id="题干"><a href="#题干" class="headerlink" title="题干"></a>题干</h2><p>n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。</p>
-<p><img src="/.io//8-queens.png" alt="img"></p>
+<p><img src="/chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/8-queens.png" alt="img"></p>
 <p>上图为 8 皇后问题的一种解法。</p>
 <p>给定一个整数 n，返回所有不同的 n 皇后问题的解决方案。</p>
 <p>每一种解法包含一个明确的 n 皇后问题的棋子放置方案，该方案中 ‘Q’ 和 ‘.’ 分别代表了皇后和空位。</p>
@@ -436,9 +436,9 @@ height:50vh;
 <p>回溯的具体做法是：使用一个数组记录每行放置的皇后的列下标，依次在每一行放置一个皇后。每次新放置的皇后都不能和已经放置的皇后之间有攻击：即新放置的皇后不能和任何一个已经放置的皇后在同一列以及同一条斜线上，并更新数组中的当前行的皇后列下标。当 NNN 个皇后都放置完毕，则找到一个可能的解。当找到一个可能的解之后，将数组转换成表示棋盘状态的列表，并将该棋盘状态的列表加入返回列表。</p>
 <p>使用三个集合 $$columns$$，$$ diagonals_1 $$,$$ diagonals_2 $$ 来分别记录每一列以及两个方向的每条斜线上是否有皇后.</p>
 <p>方向一的斜线为从左上到右下方向，同一条斜线上的每个位置满足行下标与列下标之差相等，例如 (0,0)和 (3,3)在同一条方向一的斜线上。因此使用行下标与列下标之差即可明确表示每一条方向一的斜线</p>
-<p><img src="/.io//1.png"></p>
+<p><img src="/chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/1.png"></p>
 <p>方向二的斜线为从右上到左下方向，同一条斜线上的每个位置满足行下标与列下标之和相等，例如 (3,0)(3,0)(3,0) 和 (1,2)(1,2)(1,2) 在同一条方向二的斜线上。因此使用行下标与列下标之和即可明确表示每一条方向二的斜线。</p>
-<p><img src="/.io//2.png"></p>
+<p><img src="/chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/2.png"></p>
 <p>代码:</p>
 <p>重点是回溯思想</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">class Solution:</span><br><span class="line">    def solveNQueens(self, n: int) -&gt; List[List[str]]:</span><br><span class="line">        def generateBoard():</span><br><span class="line">            board &#x3D; list()</span><br><span class="line">            for i in range(n):</span><br><span class="line">                row[queens[i]] &#x3D; &quot;Q&quot;</span><br><span class="line">                board.append(&quot;&quot;.join(row))</span><br><span class="line">                row[queens[i]] &#x3D; &quot;.&quot;</span><br><span class="line">            return board</span><br><span class="line"></span><br><span class="line">        def backtrack(row: int):</span><br><span class="line">            if row &#x3D;&#x3D; n:</span><br><span class="line">                board &#x3D; generateBoard()</span><br><span class="line">                solutions.append(board)</span><br><span class="line">            else:</span><br><span class="line">                for i in range(n):</span><br><span class="line">                    if i in columns or row - i in diagonal1 or row + i in diagonal2:</span><br><span class="line">                        continue</span><br><span class="line">                    queens[row] &#x3D; i</span><br><span class="line">                    columns.add(i)</span><br><span class="line">                    diagonal1.add(row - i)</span><br><span class="line">                    diagonal2.add(row + i)</span><br><span class="line">                    backtrack(row + 1)</span><br><span class="line">                    columns.remove(i)</span><br><span class="line">                    diagonal1.remove(row - i)</span><br><span class="line">                    diagonal2.remove(row + i)</span><br><span class="line">                    </span><br><span class="line">        solutions &#x3D; list()</span><br><span class="line">        queens &#x3D; [-1] * n</span><br><span class="line">        columns &#x3D; set()</span><br><span class="line">        diagonal1 &#x3D; set()</span><br><span class="line">        diagonal2 &#x3D; set()</span><br><span class="line">        row &#x3D; [&quot;.&quot;] * n</span><br><span class="line">        backtrack(0)</span><br><span class="line">        return solutions</span><br></pre></td></tr></table></figure>
@@ -451,7 +451,7 @@ height:50vh;
             <p>Author：<a href="https://chenhaomingbob.github.io">chenhaomingbob</a>
             <p>原文链接：<a href="https://chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/">https://chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/</a>
             <p>发表日期：<a href="https://chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/">September 3rd 2020, 6:49:58 am</a>
-            <p>更新日期：<a href="https://chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/">September 8th 2020, 9:36:24 am</a>
+            <p>更新日期：<a href="https://chenhaomingbob.github.io/2020/09/03/LeetCode-51-N%E7%9A%87%E5%90%8E/">October 11th 2020, 9:08:42 am</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -903,15 +903,13 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Linux 权限控制"><span class="iconfont-archer">&#xe606;</span>Linux 权限控制</span>
     
-        <span class="sidebar-tag-name" data-tags="数据结构-回溯"><span class="iconfont-archer">&#xe606;</span>数据结构-回溯</span>
-    
         <span class="sidebar-tag-name" data-tags="Python"><span class="iconfont-archer">&#xe606;</span>Python</span>
+    
+        <span class="sidebar-tag-name" data-tags="回溯"><span class="iconfont-archer">&#xe606;</span>回溯</span>
     
         <span class="sidebar-tag-name" data-tags="笔试题"><span class="iconfont-archer">&#xe606;</span>笔试题</span>
     
         <span class="sidebar-tag-name" data-tags="动态规划"><span class="iconfont-archer">&#xe606;</span>动态规划</span>
-    
-        <span class="sidebar-tag-name" data-tags="数据结构-动态规划"><span class="iconfont-archer">&#xe606;</span>数据结构-动态规划</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
