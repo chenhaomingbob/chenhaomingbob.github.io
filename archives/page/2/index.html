@@ -354,6 +354,79 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/chenhaomingbob.github.io/2020/09/21/LeetCode-528-%E6%8A%8A%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E7%B4%AF%E5%8A%A0%E6%A0%91/" >
+            
+                <span>LeetCode-538-把二叉搜索树转换为累加树</span>
+        </a>
+        <div class="abstract-content">
+            538 把二叉搜索树转换为累加树题干给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
+
+输入: 原始二叉搜索树:             5           /             2     13
+输出: 转换为累加树:            18           /            20     13
+
+题解
+利用二叉搜索树的性质
+
+若它左子树不空,则左子树上所有节点的值均小于它的根节点的值
+若它右子树不空,则右子树上所有节点的值均大于它的根节点的值...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/21</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/chenhaomingbob.github.io/2020/09/08/LeetCode-77-%E7%BB%84%E5%90%88/" >
+            
+                <span>LeetCode-77-组合</span>
+        </a>
+        <div class="abstract-content">
+            题干给定两个整数 n 和 k，返回 1 … n 中所有可能的 k 个数的组合。
+示例:输入: n = 4, k = 2输出:
+
+[  [2,4],  [3,4],  [2,3],  [1,2],  [1,3],  [1,4],]
+
+题解回溯算法既然是树形问题上的 深度优先遍历，因此首先画出树形结构。例如输入：n = 4, k = 2，我们可以发现如下递归结构：
+
+如果组合里有 1 ，那么需要在 [2, 3, 4] 里再找 1个数；
+
+如果组合里有 2 ，那么需要在 [3, 4] 里再找 1数。注意：这里不能再考虑 1，因为包含 1的组合，在第 1 种情况中已经包含。
+
+
+依次类推（后面部...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/08</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "回溯">回溯</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/chenhaomingbob.github.io/2020/09/04/Log%E6%97%A5%E5%BF%97%E6%A8%A1%E5%9D%97/" >
             
                 <span>logging日志模块</span>
@@ -881,9 +954,39 @@ backward (ctx : Any , *grad_outputs: Any )  ...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 17
+        Total : 19
         </div>
         <!-- search  -->
         
@@ -896,6 +999,16 @@ backward (ctx : Any , *grad_outputs: Any )  ...
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span><a class="archive-post-title" href= "/chenhaomingbob.github.io/2020/10/27/LeetCode-509-Fibonacci-Number/" >LeetCode 509 Fibonacci Number</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span><a class="archive-post-title" href= "/chenhaomingbob.github.io/2020/10/26/The-Illustrated-Transformer/" >The Illustrated Transformer</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1000,6 +1113,8 @@ backward (ctx : Any , *grad_outputs: Any )  ...
         <span class="sidebar-tag-name" data-tags="笔试题"><span class="iconfont-archer">&#xe606;</span>笔试题</span>
     
         <span class="sidebar-tag-name" data-tags="动态规划"><span class="iconfont-archer">&#xe606;</span>动态规划</span>
+    
+        <span class="sidebar-tag-name" data-tags="Attention"><span class="iconfont-archer">&#xe606;</span>Attention</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>

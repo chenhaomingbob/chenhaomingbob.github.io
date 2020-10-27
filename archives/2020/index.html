@@ -354,6 +354,65 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/chenhaomingbob.github.io/2020/10/27/LeetCode-509-Fibonacci-Number/" >
+            
+                <span>LeetCode 509 Fibonacci Number</span>
+        </a>
+        <div class="abstract-content">
+            509.  Fibonacci Number今天开始跟着labuladong学算法，建立算法思维。
+通过斐波那契数列来学习动态规划的 备忘录 和 DP Table
+题干12F(0) &#x3D; 0,   F(1) &#x3D; 1F(N) &#x3D; F(N - 1) + F(N - 2), for N &gt; 1.
+
+
+
+题解1. Memo备忘录123456789101112131415161718class Solution:    def fib(self, N: int) -&gt; int:        memo=[-1 for _ in range(N+1)]    ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/10/27</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/chenhaomingbob.github.io/2020/10/26/The-Illustrated-Transformer/" >
+            
+                <span>The Illustrated Transformer</span>
+        </a>
+        <div class="abstract-content">
+            The Illustrated Transformer来自 Jay Alammar . 做一个搬运工，在学习新知识的同时,锻炼锻炼自己的翻译水平
+先前的文章中，我们着眼于Attention - 在现代深度学习模型中常见 (ubiquitous) 的方法.  Attention是个能提高审计机器翻译英语性能的概念 (concept)。 在本文中，我们将着眼于 The Transformer - 一个使用 Attention 来提高模型训练速度的模型.  在特定的任务上, The Transformer 的性能优于 Google Neural Machine 翻译模型. 然而，它最大的优势在...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/10/26</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Attention">Attention</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/chenhaomingbob.github.io/2020/10/14/LeetCode-1002-Find-Common-Characters/" >
             
                 <span>LeetCode-1002-Find_Common_Characters</span>
@@ -563,79 +622,6 @@ Note: There can be more t...
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "笔试题">笔试题</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/chenhaomingbob.github.io/2020/09/21/LeetCode-528-%E6%8A%8A%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E6%8D%A2%E4%B8%BA%E7%B4%AF%E5%8A%A0%E6%A0%91/" >
-            
-                <span>LeetCode-538-把二叉搜索树转换为累加树</span>
-        </a>
-        <div class="abstract-content">
-            538 把二叉搜索树转换为累加树题干给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
-
-输入: 原始二叉搜索树:             5           /             2     13
-输出: 转换为累加树:            18           /            20     13
-
-题解
-利用二叉搜索树的性质
-
-若它左子树不空,则左子树上所有节点的值均小于它的根节点的值
-若它右子树不空,则右子树上所有节点的值均大于它的根节点的值...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/21</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/chenhaomingbob.github.io/2020/09/08/LeetCode-77-%E7%BB%84%E5%90%88/" >
-            
-                <span>LeetCode-77-组合</span>
-        </a>
-        <div class="abstract-content">
-            题干给定两个整数 n 和 k，返回 1 … n 中所有可能的 k 个数的组合。
-示例:输入: n = 4, k = 2输出:
-
-[  [2,4],  [3,4],  [2,3],  [1,2],  [1,3],  [1,4],]
-
-题解回溯算法既然是树形问题上的 深度优先遍历，因此首先画出树形结构。例如输入：n = 4, k = 2，我们可以发现如下递归结构：
-
-如果组合里有 1 ，那么需要在 [2, 3, 4] 里再找 1个数；
-
-如果组合里有 2 ，那么需要在 [3, 4] 里再找 1数。注意：这里不能再考虑 1，因为包含 1的组合，在第 1 种情况中已经包含。
-
-
-依次类推（后面部...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/09/08</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "回溯">回溯</a>
     
 </div>
             
@@ -933,9 +919,39 @@ Note: There can be more t...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 17
+        Total : 19
         </div>
         <!-- search  -->
         
@@ -948,6 +964,16 @@ Note: There can be more t...
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span><a class="archive-post-title" href= "/chenhaomingbob.github.io/2020/10/27/LeetCode-509-Fibonacci-Number/" >LeetCode 509 Fibonacci Number</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span><a class="archive-post-title" href= "/chenhaomingbob.github.io/2020/10/26/The-Illustrated-Transformer/" >The Illustrated Transformer</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1052,6 +1078,8 @@ Note: There can be more t...
         <span class="sidebar-tag-name" data-tags="笔试题"><span class="iconfont-archer">&#xe606;</span>笔试题</span>
     
         <span class="sidebar-tag-name" data-tags="动态规划"><span class="iconfont-archer">&#xe606;</span>动态规划</span>
+    
+        <span class="sidebar-tag-name" data-tags="Attention"><span class="iconfont-archer">&#xe606;</span>Attention</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
